@@ -39,7 +39,9 @@ def register_process():
     email = request.form.get('email')
     password = request.form.get('password')
 
-    if email not in User.email:
+    existing_users = User.email.query.all()
+
+    if email not in existing_users:
         user = User(email=email, password=password)
         db.session.add(user)
         db.session.commit()
