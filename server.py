@@ -25,8 +25,38 @@ def index():
     return render_template("homepage.html")
 
 
+@app.route('/register', methods=['GET'])
+def register_form():
+    """"""
+
+    return render_template("register_form.html")
+
+
+@app.route('/register', methods=['POST'])
+def register_process():
+    # check if email exists in db
+    # if email does not exist, create new user
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    if email not in User.email:
+        user = User(email=email, password=password)
+        db.session.add(user)
+        db.session.commit()
+
+    return redirect("/")
+
+
+@app.route("/users")
+def user_list():
+    """Show list of users."""
+
+    users = User.query.all()
+    return render_template("user_list.html", users=users)
+
+
 if __name__ == "__main__":
-    # We have to set debug=True here, since it has to be True at the
+    # We have to set debug=True here, since it has to be True at theq
     # point that we invoke the DebugToolbarExtension
     app.debug = True
     # make sure templates, etc. are not cached in debug mode
